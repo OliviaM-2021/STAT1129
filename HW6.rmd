@@ -1,0 +1,176 @@
+---
+title: "STAT1129 HW6"
+author: "Sijia Ma"
+date: "5/3/2021"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+Use R to create the following two matrices and do the indicated matrix multiplication
+
+$$\begin{bmatrix} 7 & 9 & 12 \\ 2 & 4 & 13\end{bmatrix} \times \begin{bmatrix} 1 & 7 & 12 & 19 \\ 2 & 8 & 13 & 20 \\ 3 & 9 & 14 & 21\end{bmatrix}$$
+
+What is the resulting matrix? (4 points)
+
+```{r}
+m1 <- matrix(c(7, 2, 9, 4, 12, 13), ncol = 3, nrow = 2)
+m2 <- matrix(c(1, 2, 3, 7, 8, 9, 12, 13, 14, 19, 20, 21), ncol = 4, nrow = 3)
+m1 %*% m2
+```
+
+## Question 2
+
+### a. 
+Create a data frame like the following table (2 points).
+
+```{r}
+emp.data <- data.frame(
+   id = c (1:5), 
+   name = c("Peter","Amy","Ryan","Gary","Michelle"),
+   salary = c(623.3,515.2,611.0,729.0,843.25)
+)  
+emp.data
+```
+### b. 
+Then add a column of “department”, and assign department names for the 5 persons, for example, IT, finance, computer science, etc., name your own. (2 points).
+
+```{r}
+emp.data$department <- c("Civil Engineering", "History", "Astronomy", "Math", "Computer Science")
+emp.data
+```
+
+### c.
+Extract 1st, 3rd, and 5th rows, with 2nd and 3rd columns, using c function. (3 points).
+
+```{r}
+emp.data[c(1, 3, 5), c(2, 3)]
+```
+
+### d. 
+plot a bar chart to show the salary of row 1,4,5 and label the bar with people’s name correspondingly. (3 points).
+
+```{r}
+barplot(emp.data[c(1, 4, 5), 3], names.arg = emp.data[c(1, 4, 5), 2])
+```
+
+### e.
+plot a pie chart, based on this data framework, only showing the highest salary, lowest salary, and median salary, give your plot a title, and label each pie. (3 points).
+
+```{r}
+pie(emp.data[c(1, 2, 5),3], c("median salary - Peter", "lowest salary - Amy", "highest salary - Michelle"), main = "Salary Pie Chart")
+```
+
+## Question 3
+
+Pick two functions in your final project, transfer that into R programming. One function should involve “if else” (4 points), the other function should involve “for loop or while loop” (4 points).
+
+original "if else" function 
+```
+def scorekeeper(self, result):
+    if result == 0:
+        self.even += 1
+        self.results.append('Even')
+    elif result == 1:
+        self.win += 1
+        self.results.append('Win')
+        self.score += 1
+    else:
+        self.lose += 1
+        self.results.append('Lose')
+        self.score -= 1
+```
+
+r version
+```{r}
+results <- c()
+win <- 0
+even <- 0
+lose <- 0
+score <- 0
+scorekeeper <- function(res) {
+  if (res == 0) {
+    results <<- c(results, "Even")
+    even <<- even + 1
+  }
+  else if (res == 1) {
+    results <<- c(results, "Win")
+    win <<- win + 1
+    score <<- score + 1
+  }
+  else {
+    results <<- c(results, "Lose")
+    lose <<- lose + 1
+    score <<- score - 1
+  }
+}
+```
+test code 
+```{r}
+scorekeeper(0)
+print("Even   0      0      1      0")
+print(c(results, score, win, even, lose))
+scorekeeper(1)
+print("Even   Win    1      1      1      0")
+print(c(results, score, win, even, lose))
+scorekeeper(-1)
+print("Even   Win    Lose   0      1      1      1")
+print(c(results, score, win, even, lose))
+```
+
+original "for loop or while loop" function 
+```
+def main():
+    print('Hi, Welcome to Our STAT1129 Final Project - Rock, Paper, Scissors Program')
+    board = Board()
+    while True:
+        print('='*80)
+        cmd = input('ENTER YOUR MOVE\n').lower()
+        if cmd == 'exit':
+            print('Exiting the program...')
+            print('Here is the your record vs our program')
+            board.record()
+            break
+        elif cmd == 'check':
+            board.record()
+        else:
+            player_move = board.validate(cmd)
+            if player_move == -1:
+                print('Invalid Command, try again')
+                continue
+            result = board.result(player_move)
+            board.scorekeeper(result)
+```
+
+Since there are parts where we are calling the board function which is not implemented in R, I'll just simply the code in each if statements and just prints the corresponding message instead.
+
+r version 
+```{r}
+main <- function() {
+  print("Hi, Welcome to Our STAT1129 Final Project - Rock, Paper, Scissors Program")
+  while (TRUE) {
+    print(paste(rep("=", 80), collapse=""))
+    input = readline("Enter Your Move\n")
+    if (input == "exit") {
+      print("Exiting the program...")
+      break
+    }
+    else if (input == "check") {
+      print("Checking the record...")
+      # do something
+    }
+    else {
+      print("Processing player's move...")
+      # do something
+    }
+  }
+}
+```
+
+testing part is interactive for this function.
